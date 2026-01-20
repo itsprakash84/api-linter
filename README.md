@@ -8,7 +8,7 @@
 
 ## 📝 Featured Article
 
-**[Building an AI-Powered API Linter: How We Tamed 50+ Microservices](docs/MEDIUM_ARTICLE_READY.md)**
+**[Building an AI-Enhanced API Validator: A Weekend Developer's Journey](https://dev.to/itsprakash84/building-an-ai-enhanced-api-validator-a-weekend-developers-journey-386a)**
 
 Read the story behind this tool - from production chaos to consistent APIs.
 
@@ -374,7 +374,18 @@ node api-linter-cli.js your-api.yaml --strategy=inline --fail-on-error
 node api-linter-cli.js --help
 ```
 
-## License
+## 👤 Author
+
+**Sathya Prakash MC**
+
+Software Engineer passionate about API design, microservices architecture, and developer tooling. Created this tool to solve real-world API consistency challenges in production environments.
+
+- 💼 LinkedIn: [sathyaprakash1260](https://www.linkedin.com/in/sathyaprakash1260/)
+- 🐙 GitHub: [itsprakash84](https://github.com/itsprakash84)
+- 📧 Email: [itsprakash84@gmail.com](mailto:itsprakash84@gmail.com)
+- 🔗 Project Repository: [api-linter](https://github.com/itsprakash84/api-linter/)
+
+## 📄 License
 
 MIT
 

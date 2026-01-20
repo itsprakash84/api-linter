@@ -1,0 +1,52 @@
+# ============================================================================
+# API Linter Configuration
+# ============================================================================
+
+# AI Configuration
+ai:
+  gemini:
+    # API key should be set via GEMINI_API_KEY environment variable
+    # Leave empty here for security
+    apiKey: ""
+    
+    # Model to use (gemini-1.5-flash, gemini-1.5-pro, gemini-pro)
+    model: "gemini-1.5-flash"
+    
+    # Temperature controls randomness (0.0 = deterministic, 1.0 = creative)
+    temperature: 0.7
+    
+    # Maximum tokens in AI response
+    maxTokens: 8192
+
+# Validation Configuration
+validation:
+  # Default validation strategy: inline, shared, hybrid, ref
+  defaultStrategy: "inline"
+  
+  # Minimum severity level to report: info, warning, error
+  minSeverity: "warning"
+  
+  # Exit with error code when errors are found
+  failOnError: false
+
+# Output Configuration
+output:
+  # Output format: text, json, summary
+  format: "text"
+  
+  # Use colors in terminal output
+  colorize: true
+  
+  # Show detailed validation information
+  verbose: false
+
+# Web Server Configuration
+server:
+  # Port for web interface
+  port: 3000
+  
+  # Host to bind to
+  host: "localhost"
+  
+  # Enable CORS for API endpoints
+  corsEnabled: true

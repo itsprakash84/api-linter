@@ -1,0 +1,213 @@
+version: '1.0'
+generatedAt: '2025-12-10T07:30:47.393Z'
+commonFields:
+  errors:
+    type: object
+    description: Problem type definitions MAY extend the problem details object with additional members. It was originally added to accomodate fluent validation errors in .NET which uses object of type Dictionary<string, string[]>.
+    _metadata:
+      foundIn: 11
+      consistency: 100%
+      frequency: 85%
+  title:
+    type: string
+    description: A short, human-readable summary of the problem type.
+    example: One or more validation errors occurred.
+    _metadata:
+      foundIn: 11
+      consistency: 96%
+      frequency: 85%
+  detail:
+    type: string
+    description: A human-readable explanation specific to this occurrence of the problem.
+    example: Affiliate Id validation error
+    _metadata:
+      foundIn: 11
+      consistency: 86%
+      frequency: 85%
+  traceId:
+    type: string
+    description: traceparent id for logging
+    example: 00-a6db8f0deba0d874c93f72657cf961c4-e2ef40ea3cc7fae3-00
+    _metadata:
+      foundIn: 9
+      consistency: 100%
+      frequency: 69%
+  message:
+    type: string
+    description: The authorization response description. Please be sure to send the raw values received from the payment gateway.
+    example: Service is operating normally
+    _metadata:
+      foundIn: 5
+      consistency: 100%
+      frequency: 38%
+  firstName:
+    type: string
+    description: First name
+    example: Gus
+    _metadata:
+      foundIn: 4
+      consistency: 100%
+      frequency: 31%
+  lastName:
+    type: string
+    description: Last name
+    example: Jones
+    _metadata:
+      foundIn: 4
+      consistency: 100%
+      frequency: 31%
+  email:
+    type: string
+    description: Email address of the guest.
+    example: gus@jones.com
+    _metadata:
+      foundIn: 4
+      consistency: 100%
+      frequency: 31%
+  currency:
+    type: string
+    description: Currency code in upper case ISO-4217 format.
+    _metadata:
+      foundIn: 4
+      consistency: 100%
+      frequency: 31%
+  name:
+    type: string
+    description: Property name.
+    example: MBFRPF
+    _metadata:
+      foundIn: 4
+      consistency: 97%
+      frequency: 31%
+  currencyCode:
+    type: string
+    description: Currency code in upper case ISO-4217 format
+    example: EUR
+    _metadata:
+      foundIn: 3
+      consistency: 100%
+      frequency: 23%
+  countryCode:
+    type: string
+    description: '[Alpha-2 country code](https://www.iban.com/country-codes).'
+    example: AU
+    _metadata:
+      foundIn: 3
+      consistency: 100%
+      frequency: 23%
+  description:
+    type: string
+    description: Full detailed search string of the saved location.
+    example: Auckland to New York
+    _metadata:
+      foundIn: 3
+      consistency: 96%
+      frequency: 23%
+  id:
+    type: string
+    description: Budget guid.
+    _metadata:
+      foundIn: 3
+      consistency: 91%
+      frequency: 23%
+  bookingId:
+    type: string
+    description: The ID of the booking created from the quote.
+    example: '123456'
+    _metadata:
+      foundIn: 3
+      consistency: 80%
+      frequency: 23%
+  travellers:
+    type: array
+    description: Travellers objects, each one containing information about a travellers in the order.
+    _metadata:
+      foundIn: 2
+      consistency: 100%
+      frequency: 15%
+  rates:
+    type: array
+    description: The collection of exchange rates with the base currency (the currencies underneath are the quote currencies, and the rate is the exchange rate between the base currency and the quote currency)
+    _metadata:
+      foundIn: 2
+      consistency: 100%
+      frequency: 15%
+  quantity:
+    type: integer
+    description: Number of selected room rates.
+    example: 1
+    _metadata:
+      foundIn: 2
+      consistency: 100%
+      frequency: 15%
+  category:
+    type: string
+    description: Category of the filter that can be use when grouping the filter for display
+    example: Hotel
+    _metadata:
+      foundIn: 2
+      consistency: 100%
+      frequency: 15%
+  amount:
+    type: number
+    description: The budget amount. Should be a whole number without a decimal.
+    example: 520.49
+    _metadata:
+      foundIn: 2
+      consistency: 100%
+      frequency: 15%
+  cityName:
+    type: string
+    description: Property city name, always in English.
+    example: Melbourne
+    _metadata:
+      foundIn: 2
+      consistency: 100%
+      frequency: 15%
+  countryName:
+    type: string
+    description: Country name.
+    example: Australia
+    _metadata:
+      foundIn: 2
+      consistency: 100%
+      frequency: 15%
+  latitude:
+    type: number
+    description: Latitude coordinate of the property.
+    example: -36.84848
+    _metadata:
+      foundIn: 2
+      consistency: 100%
+      frequency: 15%
+  longitude:
+    type: number
+    description: Longitude coordinate of the property.
+    example: 174.762197
+    _metadata:
+      foundIn: 2
+      consistency: 100%
+      frequency: 15%
+  label:
+    type: string
+    description: A small label describing the purpose of the location.
+    example: Head Office
+    _metadata:
+      foundIn: 2
+      consistency: 100%
+      frequency: 15%
+  language:
+    type: string
+    description: Selected language
+    _metadata:
+      foundIn: 2
+      consistency: 100%
+      frequency: 15%
+  price:
+    type: number
+    description: Numeric price value.
+    example: 300
+    _metadata:
+      foundIn: 2
+      consistency: 89%
+      frequency: 15%

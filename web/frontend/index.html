@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Linter - OpenAPI Validator</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/material-darker.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/eclipse.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="header-left">
+                <h1>🔍 API Linter</h1>
+                <p class="header-subtitle">OpenAPI Specification Validator</p>
+            </div>
+            <div class="header-right">
+                <button id="themeToggle" class="icon-btn" title="Toggle Dark/Light Mode">
+                    <span class="theme-icon">🌙</span>
+                </button>
+                <button id="settingsBtn" class="icon-btn" title="Settings">
+                    <span>⚙️</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Settings Panel (Hidden by default) -->
+    <div id="settingsPanel" class="settings-panel hidden">
+        <div class="settings-content">
+            <h3>Validation Settings</h3>
+            <div class="setting-group">
+                <label for="strategySelect">Validation Strategy:</label>
+                <select id="strategySelect">
+                    <option value="inline" selected>Inline (Recommended)</option>
+                    <option value="ref">Reference ($ref)</option>
+                    <option value="shared">Shared (common.yaml)</option>
+                    <option value="hybrid">Hybrid</option>
+                </select>
+            </div>
+            <div class="setting-group">
+                <label for="severitySelect">Minimum Severity:</label>
+                <select id="severitySelect">
+                    <option value="error">Error Only</option>
+                    <option value="warning" selected>Error + Warning</option>
+                    <option value="info">All (Error + Warning + Info)</option>
+                </select>
+            </div>
+            <div class="setting-group">
+                <label>
+                    <input type="checkbox" id="autoValidate" checked>
+                    Auto-validate on change
+                </label>
+            </div>
+            <div class="setting-group">
+                <label for="industrySelect">Industry Context:</label>
+                <select id="industrySelect">
+                    <option value="general" selected>General</option>
+                    <option value="travel">Travel & Hospitality</option>
+                    <option value="banking">Banking & Finance</option>
+                    <option value="employee">Employee Management</option>
+                </select>
+            </div>
+            <div class="setting-group">
+                <label>
+                    <input type="checkbox" id="enableAI">
+                    🤖 Enable AI-powered suggestions (requires GEMINI_API_KEY)
+                </label>
+                <p class="setting-hint">Get enhanced suggestions using Google Gemini AI</p>
+            </div>
+            <button id="closeSettings" class="btn btn-secondary">Close</button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Upload Section -->
+        <section class="upload-section">
+            <div class="upload-tabs">
+                <button class="tab-btn active" data-tab="upload">📂 Upload File</button>
+                <button class="tab-btn" data-tab="paste">📝 Paste YAML</button>
+                <button class="tab-btn" data-tab="github">🔗 From GitHub</button>
+                <button class="tab-btn" data-tab="example">📚 Load Example</button>
+            </div>
+
+            <!-- Upload Tab -->
+            <div id="uploadTab" class="tab-content active">
+                <div class="upload-area" id="dropZone">
+                    <div class="upload-icon">📄</div>
+                    <h3>Drag & Drop your OpenAPI YAML file</h3>
+                    <p>or</p>
+                    <label for="fileInput" class="btn btn-primary">
+                        Choose File
+                        <input type="file" id="fileInput" accept=".yaml,.yml" hidden>
+                    </label>
+                    <p class="upload-hint">Supports OpenAPI 3.0+ YAML files</p>
+                </div>
+            </div>
+
+            <!-- Paste Tab -->
+            <div id="pasteTab" class="tab-content">
+                <div class="paste-area">
+                    <textarea id="pasteInput" placeholder="Paste your OpenAPI YAML specification here..." rows="8"></textarea>
+                    <button id="validatePaste" class="btn btn-primary">Validate YAML</button>
+                </div>
+            </div>
+
+            <!-- GitHub Tab -->
+            <div id="githubTab" class="tab-content">
+                <div class="github-input">
+                    <input type="text" id="githubUrl" placeholder="https://github.com/user/repo/blob/main/api/openapi.yaml">
+                    <button id="fetchGithub" class="btn btn-primary">Fetch from GitHub</button>
+                    <p class="upload-hint">Enter raw GitHub URL or file URL</p>
+                </div>
+            </div>
+
+            <!-- Example Tab -->
+            <div id="exampleTab" class="tab-content">
+                <div class="example-list">
+                    <h4>Travel & Hospitality</h4>
+                    <button class="example-btn" data-example="flights-good">✈️ Flights API (Good)</button>
+                    <button class="example-btn" data-example="flights-bad">✈️ Flights API (Bad)</button>
+                    <button class="example-btn" data-example="hotels-good">🏨 Hotels API (Good)</button>
+                    <button class="example-btn" data-example="hotels-bad">🏨 Hotels API (Bad)</button>
+                    
+                    <h4>Employee Management</h4>
+                    <button class="example-btn" data-example="employee-service-good">👥 Employee API (Good)</button>
+                    <button class="example-btn" data-example="employee-service-bad">👥 Employee API (Bad)</button>
+                    
+                    <h4>Banking & Finance</h4>
+                    <button class="example-btn" data-example="banking-service-good">💰 Banking API (Good)</button>
+                    <button class="example-btn" data-example="banking-service-bad">💰 Banking API (Bad)</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Editor and Results Section -->
+        <section class="editor-section hidden" id="editorSection">
+            <div class="editor-header">
+                <div class="editor-tabs">
+                    <button class="editor-tab active" data-editor-tab="editor">📝 YAML Editor</button>
+                    <button class="editor-tab" data-editor-tab="results">📊 Validation Results</button>
+                </div>
+                <div class="editor-actions">
+                    <span id="fileName" class="file-name"></span>
+                    <button id="validateBtn" class="btn btn-primary">▶️ Validate</button>
+                    <button id="clearBtn" class="btn btn-secondary">🗑️ Clear</button>
+                </div>
+            </div>
+
+            <div class="editor-container">
+                <!-- YAML Editor Panel -->
+                <div id="editorPanel" class="editor-panel active">
+                    <div class="editor-toolbar">
+                        <span class="toolbar-label">YAML Specification</span>
+                        <div class="toolbar-actions">
+                            <button id="formatYaml" class="toolbar-btn" title="Format YAML">
+                                <span>✨</span> Format
+                            </button>
+                            <button id="downloadYaml" class="toolbar-btn" title="Download YAML">
+                                <span>💾</span> Download
+                            </button>
+                        </div>
+                    </div>
+                    <textarea id="yamlEditor"></textarea>
+                </div>
+
+                <!-- Results Panel -->
+                <div id="resultsPanel" class="results-panel">
+                    <div class="results-toolbar">
+                        <span class="toolbar-label">Validation Results</span>
+                        <div class="toolbar-actions">
+                            <button id="exportJson" class="toolbar-btn" title="Export as JSON">
+                                <span>📥</span> JSON
+                            </button>
+                            <button id="exportHtml" class="toolbar-btn" title="Export as HTML">
+                                <span>📄</span> HTML
+                            </button>
+                            <button id="shareResults" class="toolbar-btn" title="Share Results">
+                                <span>🔗</span> Share
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Loading State -->
+                    <div id="loadingState" class="loading-state hidden">
+                        <div class="spinner"></div>
+                        <p>Validating your API specification...</p>
+                    </div>
+
+                    <!-- Results Content -->
+                    <div id="resultsContent" class="results-content">
+                        <!-- Initial State -->
+                        <div id="initialState" class="empty-state">
+                            <div class="empty-icon">🎯</div>
+                            <h3>Ready to Validate</h3>
+                            <p>Upload or paste your OpenAPI YAML file to get started</p>
+                        </div>
+
+                        <!-- Results Display -->
+                        <div id="resultsDisplay" class="hidden">
+                            <!-- Summary -->
+                            <div class="results-summary" id="resultsSummary">
+                                <div class="summary-card">
+                                    <div class="summary-icon error-icon">✗</div>
+                                    <div class="summary-details">
+                                        <span class="summary-count" id="errorCount">0</span>
+                                        <span class="summary-label">Errors</span>
+                                    </div>
+                                </div>
+                                <div class="summary-card">
+                                    <div class="summary-icon warning-icon">⚠</div>
+                                    <div class="summary-details">
+                                        <span class="summary-count" id="warningCount">0</span>
+                                        <span class="summary-label">Warnings</span>
+                                    </div>
+                                </div>
+                                <div class="summary-card">
+                                    <div class="summary-icon info-icon">ℹ</div>
+                                    <div class="summary-details">
+                                        <span class="summary-count" id="infoCount">0</span>
+                                        <span class="summary-label">Info</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Filter Bar -->
+                            <div class="filter-bar">
+                                <div class="filter-buttons">
+                                    <button class="filter-btn active" data-filter="all">All Issues</button>
+                                    <button class="filter-btn" data-filter="error">Errors</button>
+                                    <button class="filter-btn" data-filter="warning">Warnings</button>
+                                    <button class="filter-btn" data-filter="info">Info</button>
+                                </div>
+                                <input type="text" id="searchIssues" placeholder="🔍 Search issues..." class="search-input">
+                            </div>
+
+                            <!-- Issues List -->
+                            <div class="issues-list" id="issuesList">
+                                <!-- Issues will be populated here by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>API Linter v1.0 | Powered by OpenAPI Validation Engine</p>
+    </footer>
+
+    <!-- Toast Notifications -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/yaml/yaml.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

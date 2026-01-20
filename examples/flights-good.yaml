@@ -1,0 +1,69 @@
+openapi: 3.0.3
+info:
+  title: Travel Flights API - Good Example
+  version: 1.0.0
+paths:
+  /flights:
+    get:
+      summary: List flights
+      responses:
+        '200':
+          description: OK - list of flights
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Flight'
+                  meta:
+                    $ref: '#/components/schemas/PaginationMeta'
+                required: [data, meta]
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    Flight:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/UserID'
+        airline:
+          type: string
+        departure:
+          type: string
+        price:
+          type: number
+      required: [id, airline, departure]
+    UserID:
+      type: string
+      description: Unique identifier for a user
+    PaginationMeta:
+      type: object
+      properties:
+        total:
+          type: integer
+        limit:
+          type: integer
+        offset:
+          type: integer
+      required: [total, limit, offset]
+    ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        details:
+          type: array
+          items:
+            type: object
+      required: [code, message]
+

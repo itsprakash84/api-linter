@@ -1,0 +1,42 @@
+{
+  "name": "api-linter",
+  "version": "1.3.0",
+  "description": "OpenAPI Specification validator enforcing API standards (ErrorResponse, common components).",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "lint:examples": "npx @stoplight/spectral-cli lint --ruleset .spectral.yaml examples/*.yaml",
+    "lint:good": "npx @stoplight/spectral-cli lint --ruleset .spectral.yaml examples/*-good.yaml",
+    "lint:bad": "npx @stoplight/spectral-cli lint --ruleset .spectral.yaml examples/*-bad.yaml",
+    "validate": "node bin/api-linter.js",
+    "validate:ref": "node bin/api-linter.js examples/flights-good.yaml --strategy=ref",
+    "validate:inline": "node bin/api-linter.js examples/flights-good.yaml --strategy=inline",
+    "validate:shared": "node bin/api-linter.js examples/flights-good.yaml --strategy=shared --common-spec=config/common.yaml",
+    "validate:hybrid": "node bin/api-linter.js examples/flights-good.yaml --strategy=hybrid",
+    "validate:all": "npm run validate:ref && npm run validate:inline && npm run validate:shared && npm run validate:hybrid",
+    "test": "node bin/api-linter.js examples/flights-good.yaml --strategy=inline --format=summary",
+    "discover": "node bin/discover-common-fields.js examples --output config/common.yaml"
+  },
+  "bin": {
+    "api-lint": "./bin/api-linter.js",
+    "discover-common": "./bin/discover-common-fields.js"
+  },
+  "dependencies": {
+    "js-yaml": "^4.1.0",
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "multer": "^1.4.5-lts.1",
+    "compression": "^1.7.4",
+    "helmet": "^7.1.0"
+  },
+  "devDependencies": {
+    "@stoplight/spectral": "^6.5.0",
+    "@stoplight/spectral-cli": "^6.7.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": ["api", "linter", "openapi", "validator", "swagger"],
+  "author": "Sathya Prakash MC",
+  "license": "MIT"
+}

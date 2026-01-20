@@ -1,0 +1,153 @@
+openapi: 3.0.0
+info:
+  title: Banking API
+  version: 1.0.0
+
+paths:
+  /accounts:
+    get:
+      summary: Get accounts
+      parameters:
+        - name: type
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Account'
+
+  /accounts/{id}:
+    get:
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+
+  /accounts/{id}/transactions:
+    get:
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: start
+          in: query
+          schema:
+            type: string
+        - name: end
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Transaction'
+
+  /transfers:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransferRequest'
+      responses:
+        '200':
+          description: Transfer created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transfer'
+
+components:
+  schemas:
+    Account:
+      type: object
+      properties:
+        account_id:
+          type: string
+        account_number:
+          type: string
+        account_type:
+          type: string
+        currency_code:
+          type: string
+        balance:
+          type: number
+        available_balance:
+          type: number
+        status:
+          type: string
+
+    Transaction:
+      type: object
+      properties:
+        transaction_id:
+          type: string
+        account_id:
+          type: string
+        transaction_type:
+          type: string
+        amount:
+          type: number
+        currency_code:
+          type: string
+        description:
+          type: string
+        transaction_date:
+          type: string
+        status:
+          type: string
+
+    TransferRequest:
+      type: object
+      properties:
+        from_account_id:
+          type: string
+        to_account_id:
+          type: string
+        amount:
+          type: number
+        currency_code:
+          type: string
+        description:
+          type: string
+
+    Transfer:
+      type: object
+      properties:
+        transfer_id:
+          type: string
+        from_account_id:
+          type: string
+        to_account_id:
+          type: string
+        amount:
+          type: number
+        currency_code:
+          type: string
+        status:
+          type: string

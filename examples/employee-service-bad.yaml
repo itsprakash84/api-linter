@@ -1,0 +1,143 @@
+openapi: 3.0.0
+info:
+  title: Employee API
+  version: 1.0.0
+
+paths:
+  /employees:
+    get:
+      summary: Get employees
+      parameters:
+        - name: dept
+          in: query
+          schema:
+            type: string
+        - name: status
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Employee'
+                  meta:
+                    type: object
+
+    post:
+      summary: Create employee
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmployeeCreate'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+
+  /employees/{id}:
+    get:
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+
+    patch:
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmployeeUpdate'
+      responses:
+        '200':
+          description: Updated
+
+components:
+  schemas:
+    Employee:
+      type: object
+      properties:
+        employee_id:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        department:
+          type: string
+        position:
+          type: string
+        employment_status:
+          type: string
+        hire_date:
+          type: string
+        salary:
+          type: number
+        manager_id:
+          type: string
+        created_at:
+          type: string
+        updated_at:
+          type: string
+
+    EmployeeCreate:
+      type: object
+      properties:
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+        department:
+          type: string
+        position:
+          type: string
+        hire_date:
+          type: string
+
+    EmployeeUpdate:
+      type: object
+      properties:
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+        department:
+          type: string
+        position:
+          type: string
+        salary:
+          type: number

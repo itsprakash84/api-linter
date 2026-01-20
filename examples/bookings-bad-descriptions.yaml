@@ -1,0 +1,128 @@
+openapi: 3.0.3
+info:
+  title: Bookings API - Bad Example
+  version: 1.0.0
+  description: Example with validation issues
+
+paths:
+  /bookings:
+    get:
+      summary: List bookings
+      # Missing description
+      parameters:
+        - name: page
+          in: query
+          description: page number  # Bad: no uppercase, no punctuation
+          schema:
+            type: integer
+        - name: status
+          in: query
+          # Missing description - ERROR
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ok  # Bad: too short, no uppercase, no punctuation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        booking_id:
+                          type: string
+                          # Missing description - ERROR
+                        user_id:
+                          type: string
+                          description: user id  # Bad: no uppercase, no punctuation
+                        amount:
+                          type: string  # Warning: should be number
+                          description: Amount  # Bad: no punctuation, too short
+                        currency_code:
+                          type: string
+                          # Missing pattern - WARNING
+                          description: Currency  # Bad: too short, no punctuation
+                        status:
+                          type: string
+                          description: status of booking  # Bad: no uppercase, no punctuation
+                        created_at:
+                          type: string
+                          # Missing format - INFO
+                          description: created timestamp  # Bad: no uppercase, no punctuation
+                  meta:
+                    type: object
+                    properties:
+                      total:
+                        type: integer
+                        # Missing description - ERROR
+                      page:
+                        type: integer
+                        description: Page  # Bad: too short, no punctuation
+        '400':
+          description: Bad request  # Bad: no punctuation, too short
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    # Missing description - ERROR
+                  code:
+                    type: string
+                    description: error code  # Bad: no uppercase, no punctuation
+        '500':
+          # Missing description - WARNING
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Error  # Bad: too short, no punctuation
+
+    post:
+      # Missing summary and description - WARNING
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                flight_number:
+                  type: string
+                  # Missing description - ERROR
+                passenger_name:
+                  type: string
+                  description: name  # Bad: no uppercase, no punctuation, too short
+                email:
+                  type: string
+                  # Missing format - INFO
+                  description: email address  # Bad: no uppercase, no punctuation
+      responses:
+        '201':
+          description: Created  # Bad: no punctuation, too short
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  booking_id:
+                    type: string
+                    description: ID  # Bad: too short, no punctuation
+                  created_at:
+                    type: string
+                    description: timestamp  # Bad: no uppercase, no punctuation, too short
+
+# This example demonstrates multiple validation issues:
+# 1. Missing descriptions (ERROR)
+# 2. Poor descriptions without punctuation (WARNING)
+# 3. Descriptions too short (WARNING)
+# 4. Common fields not following patterns (WARNING)
+# 5. Missing formats/patterns (INFO/WARNING)

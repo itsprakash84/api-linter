@@ -1,0 +1,137 @@
+openapi: 3.0.3
+info:
+  title: Flights API - Inline Strategy Example
+  version: 1.0.0
+  description: |
+    This example demonstrates the INLINE strategy where common fields
+    are defined inline without requiring references to shared components.
+    
+    This is ideal for microservices that need to be independent.
+
+paths:
+  /flights:
+    get:
+      summary: List available flights
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: per_page
+          in: query
+          schema:
+            type: integer
+            default: 20
+      responses:
+        '200':
+          description: Successful response with flight list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        flight_id:
+                          type: string
+                          example: "FLT123"
+                        airline:
+                          type: string
+                          example: "Air New Zealand"
+                        departure:
+                          type: string
+                          format: date-time
+                        arrival:
+                          type: string
+                          format: date-time
+                        price:
+                          type: number
+                          format: float
+                        currency_code:
+                          type: string
+                          pattern: '^[A-Z]{3}$'
+                          example: "NZD"
+                        booked_by:
+                          type: string
+                          description: "User ID who booked"
+                          example: "usr_12345"
+                  meta:
+                    type: object
+                    properties:
+                      total:
+                        type: integer
+                      page:
+                        type: integer
+                      per_page:
+                        type: integer
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Invalid query parameters"
+                  code:
+                    type: string
+                    example: "BAD_REQUEST"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  code:
+                    type: string
+
+  /flights/{id}:
+    get:
+      summary: Get flight details
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Flight details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  flight_id:
+                    type: string
+                  airline:
+                    type: string
+                  price:
+                    type: number
+                  currency_code:
+                    type: string
+                    pattern: '^[A-Z]{3}$'
+        '404':
+          description: Flight not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Flight not found"
+                  code:
+                    type: string
+                    example: "NOT_FOUND"
+
+# Note: No components section needed with inline strategy!
+# This makes the API spec completely self-contained with no external dependencies.

@@ -60,3 +60,5 @@ review-apispec
 .env
 .env.local
 docs/
+docs/
+docs/
